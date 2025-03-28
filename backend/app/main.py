@@ -1,9 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from typing import List, Optional
+
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
+
 from .database import SessionLocal, engine
-from .models import Base, Article
+from .models import Article, Base
 
 Base.metadata.create_all(bind=engine)
 
@@ -94,3 +96,58 @@ async def startup():
         db.add_all(sample_articles)
         db.commit()
     db.close()
+
+
+class ArticleCreate(BaseModel):
+    title: str
+    content: str
+    author: str
+
+
+class ArticleUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    author: Optional[str] = None
+
+
+@app.post("/articles/", response_model=ArticleSchema, tags=["Articles"])
+async def create_article(article: ArticleCreate):
+    db = SessionLocal()
+    db_article = Article(**article.dict())
+    db.add(db_article)
+    db.commit()
+    db.refresh(db_article)
+    db.close()
+    return db_article
+
+
+@app.put(
+    "/articles/{article_id}", response_model=ArticleSchema, tags=["Articles"]
+)
+async def update_article(article_id: int, article: ArticleUpdate):
+    db = SessionLocal()
+    db_article = db.query(Article).filter(Article.id == article_id).first()
+    if not db_article:
+        raise HTTPException(status_code=404, detail="Article not found")
+
+    update_data = article.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(db_article, key, value)
+
+    db.commit()
+    db.refresh(db_article)
+    db.close()
+    return db_article
+
+
+@app.delete("/articles/{article_id}", tags=["Articles"])
+async def delete_article(article_id: int):
+    db = SessionLocal()
+    db_article = db.query(Article).filter(Article.id == article_id).first()
+    if not db_article:
+        raise HTTPException(status_code=404, detail="Article not found")
+
+    db.delete(db_article)
+    db.commit()
+    db.close()
+    return {"message": "Article deleted successfully"}
