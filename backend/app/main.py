@@ -26,6 +26,7 @@ class ArticleSchema(BaseModel):
     title: str
     content: str
     author: str
+    is_markdown: bool
 
     class Config:
         orm_mode = True
@@ -75,6 +76,7 @@ async def startup():
                 title="FastAPI Introduction",
                 content="FastAPI is a modern, fast web framework...",
                 author="John Doe",
+                is_markdown=True,
             ),
             Article(
                 title="React Basics",
@@ -83,6 +85,7 @@ async def startup():
                     "user interfaces..."
                 ),
                 author="Jane Smith",
+                is_markdown=True,
             ),
             Article(
                 title="Docker for Developers",
@@ -91,6 +94,7 @@ async def startup():
                     "application processes..."
                 ),
                 author="Mike Johnson",
+                is_markdown=True,
             ),
         ]
         db.add_all(sample_articles)
@@ -102,12 +106,14 @@ class ArticleCreate(BaseModel):
     title: str
     content: str
     author: str
+    is_markdown: bool = True
 
 
 class ArticleUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
     author: Optional[str] = None
+    is_markdown: Optional[bool] = None
 
 
 @app.post("/articles/", response_model=ArticleSchema, tags=["Articles"])

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
+
 from .database import Base
 
 
@@ -9,3 +10,4 @@ class Article(Base):
     title = Column(String, index=True)
     content = Column(String)
     author = Column(String)
+    is_markdown = Column(Boolean, default=True)

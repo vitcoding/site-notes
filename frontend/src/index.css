@@ -74,3 +74,71 @@ button:hover {
 .article-actions {
   margin-top: 0.5rem;
 }
+
+/* Markdown Editor Styles */
+.markdown-editor {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabs button {
+  padding: 0.5rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background-color: #f0f0f0;
+  border-bottom: 2px solid #007bff;
+}
+
+.editor-textarea {
+  width: 100%;
+  min-height: 300px;
+  padding: 1rem;
+  border: none;
+  resize: vertical;
+  font-family: monospace;
+}
+
+.markdown-preview {
+  padding: 1rem;
+  min-height: 300px;
+}
+
+.markdown-content {
+  line-height: 1.6;
+}
+
+.markdown-content h1, 
+.markdown-content h2, 
+.markdown-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.markdown-content p {
+  margin-bottom: 1rem;
+}
+
+.markdown-content pre {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.markdown-content code {
+  font-family: monospace;
+  background-color: #f5f5f5;
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.9em;
+}

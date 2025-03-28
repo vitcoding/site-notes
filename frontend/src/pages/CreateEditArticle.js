@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import MarkdownEditor from '../components/MarkdownEditor';
 
 const CreateEditArticle = () => {
     const { articleId } = useParams();
@@ -7,7 +8,8 @@ const CreateEditArticle = () => {
     const [article, setArticle] = useState({
         title: '',
         content: '',
-        author: ''
+        author: '',
+        is_markdown: true
     });
 
     useEffect(() => {
@@ -45,6 +47,10 @@ const CreateEditArticle = () => {
         setArticle(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleContentChange = (content) => {
+        setArticle(prev => ({ ...prev, content }));
+    };
+
     return (
         <div className="container">
             <h1>{articleId ? 'Edit Article' : 'Create New Article'}</h1>
@@ -60,13 +66,10 @@ const CreateEditArticle = () => {
                     />
                 </div>
                 <div className="form-group">
-                    <label>Content</label>
-                    <textarea
-                        name="content"
-                        value={article.content}
-                        onChange={handleChange}
-                        required
-                        rows="10"
+                    <label>Content (Markdown)</label>
+                    <MarkdownEditor 
+                        value={article.content} 
+                        onChange={handleContentChange} 
                     />
                 </div>
                 <div className="form-group">
@@ -79,6 +82,11 @@ const CreateEditArticle = () => {
                         required
                     />
                 </div>
+                <input 
+                    type="hidden" 
+                    name="is_markdown" 
+                    value={article.is_markdown} 
+                />
                 <button type="submit">Save</button>
             </form>
         </div>
