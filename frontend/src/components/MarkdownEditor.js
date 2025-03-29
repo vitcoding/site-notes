@@ -10,12 +10,14 @@ const MarkdownEditor = ({ value, onChange }) => {
     <div className="markdown-editor">
       <div className="tabs">
         <button
+          type="button"
           className={activeTab === 'write' ? 'active' : ''}
           onClick={() => setActiveTab('write')}
         >
           Write
         </button>
         <button
+          type="button"
           className={activeTab === 'preview' ? 'active' : ''}
           onClick={() => setActiveTab('preview')}
         >
