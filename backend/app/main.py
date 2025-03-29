@@ -32,6 +32,20 @@ class ArticleSchema(BaseModel):
         orm_mode = True
 
 
+class ArticleCreate(BaseModel):
+    title: str
+    content: str
+    author: str
+    is_markdown: bool = True
+
+
+class ArticleUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    author: Optional[str] = None
+    is_markdown: Optional[bool] = None
+
+
 # Database dependency
 def get_db():
     db = SessionLocal()
@@ -39,31 +53,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-@app.get("/", tags=["Root"])
-async def read_root():
-    return {"message": "Welcome to the Articles API"}
-
-
-@app.get("/articles/", response_model=List[ArticleSchema], tags=["Articles"])
-async def read_articles():
-    db = SessionLocal()
-    articles = db.query(Article).all()
-    db.close()
-    return articles
-
-
-@app.get(
-    "/articles/{article_id}", response_model=ArticleSchema, tags=["Articles"]
-)
-async def read_article(article_id: int):
-    db = SessionLocal()
-    article = db.query(Article).filter(Article.id == article_id).first()
-    db.close()
-    if article is None:
-        raise HTTPException(status_code=404, detail="Article not found")
-    return article
 
 
 # Initialize with some sample data
@@ -102,18 +91,29 @@ async def startup():
     db.close()
 
 
-class ArticleCreate(BaseModel):
-    title: str
-    content: str
-    author: str
-    is_markdown: bool = True
+@app.get("/", tags=["Root"])
+async def read_root():
+    return {"message": "Welcome to the Articles API"}
 
 
-class ArticleUpdate(BaseModel):
-    title: Optional[str] = None
-    content: Optional[str] = None
-    author: Optional[str] = None
-    is_markdown: Optional[bool] = None
+@app.get("/articles/", response_model=List[ArticleSchema], tags=["Articles"])
+async def read_articles():
+    db = SessionLocal()
+    articles = db.query(Article).all()
+    db.close()
+    return articles
+
+
+@app.get(
+    "/articles/{article_id}", response_model=ArticleSchema, tags=["Articles"]
+)
+async def read_article(article_id: int):
+    db = SessionLocal()
+    article = db.query(Article).filter(Article.id == article_id).first()
+    db.close()
+    if article is None:
+        raise HTTPException(status_code=404, detail="Article not found")
+    return article
 
 
 @app.post("/articles/", response_model=ArticleSchema, tags=["Articles"])
