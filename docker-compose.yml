@@ -6,7 +6,11 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./backend/app:/app/app
+      - type: bind
+        source: ./db_data/sql_app.db
+        target: /app/sql_app.db
+        bind:
+          create_host_path: true
     environment:
       - PYTHONUNBUFFERED=1
 
